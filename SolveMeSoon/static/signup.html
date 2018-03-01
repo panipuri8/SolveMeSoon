@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		SignUp to Solve You Soon
+	</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->	
+	<link rel="icon" type="image/png" href="images/icons/write.png"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/iconic/css/material-design-iconic-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->	
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+
+<script type="text/javascript">
+		function setCookie(cname,cvalue,exdays) {
+		    let d = new Date();
+		    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+		    let expires = "expires=" + d.toGMTString();
+		    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+		}
+
+		function validate() {
+			let uname = document.getElementById('username').value;
+			let pass = document.getElementById('pass').value;
+			let cpass = document.getElementById('cpass').value;
+			let mail = document.getElementById('mail').value;
+			if(pass != cpass) {
+				alert("Passwords do not match");
+				return;
+			}
+			if(pass.length < 6 || pass.length > 15) {
+				alert("Password should only be six to fifteen characters long");
+				return;
+			}
+			if(uname.length < 6 || uname.length > 15) {
+				alert("Username should only be six to fifteen characters long");
+				return;
+			}
+			let url = "/signup";
+			let xmlHttp = new XMLHttpRequest();
+			let JSON_Object = {"uname":uname , "pass":pass, "mail":mail};
+			let JSON_String = JSON.stringify(JSON_Object);
+			xmlHttp.open("POST" , url , false);
+			xmlHttp.send(JSON_String);
+			let JSON_Response = JSON.parse(xmlHttp.responseText);
+			if(JSON_Response["Success"]) {
+				console.log("Signed up");
+				setCookie("username",uname,1);
+				window.location.href = "profile.html";
+			}
+			else if(JSON_Response["Error"]) {
+				alert(JSON_Response["Error"]);
+				document.getElementById('username').value = null;
+				document.getElementById('pass').value = null;
+				document.getElementById('cpass').value = null;
+			}
+		};
+
+		function getCookie(cname) {
+		    var name = cname + "=";
+		    var decodedCookie = decodeURIComponent(document.cookie);
+		    var ca = decodedCookie.split(';');
+		    for(var i = 0; i < ca.length; i++) {
+		        var c = ca[i];
+		        while (c.charAt(0) == ' ') {
+		            c = c.substring(1);
+		        }
+		        if (c.indexOf(name) == 0) {
+		            return c.substring(name.length, c.length);
+		        }
+		    }
+		    return "";
+		}
+
+		function checkCookie() {
+		    var user=getCookie("username");
+		    if (user != "") {
+		    	window.location.href = "profile.html";
+		    } 
+		}
+</script>
+
+<body onload="javascript:checkCookie()">
+	<div class="limiter">
+		<div class="container-login100" style="background-image: url('images/bg-02.jpg');">
+			<div class="wrap-login100">
+				<form class="login100-form validate-form" method="POST" action="javascript:validate()" autocomplete="off">
+					<span class="login100-form-title p-b-34 p-t-27">
+						SIGN UP
+					</span>
+
+					<div class="wrap-input100 validate-input" data-validate="Enter username">
+						<input class="input100" type="text" name="username" placeholder="Username" id="username">
+						<span class="focus-input100" data-placeholder="&#xf207;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+						<input class="input100" type="password" name="pass" placeholder="Password" id="pass">
+						<span class="focus-input100" data-placeholder="&#xf191;"></span>
+					</div>
+
+
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+						<input class="input100" type="password" name="cpass" placeholder="Confirm Password" id="cpass">
+						<span class="focus-input100" data-placeholder="&#xf191;"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Email Address">
+						<input class="input100" type="text" name="mail" placeholder="Enter your Email ID" id="mail">
+						<span class="focus-input100" data-placeholder="&#xf194;"></span>
+					</div>
+
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn">
+							Create Account
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
