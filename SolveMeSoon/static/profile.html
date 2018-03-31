@@ -60,7 +60,53 @@
 			window.location.href = "index.html";
 		}
 
+		function deleteProblems() {
+			let arr1 = document.getElementsByTagName('a');
+			let arr2 = document.getElementsByTagName('input');
+			let jsonObject = {
+				"username" : getCookie("username"),
+				"pcodes" : []
+			};
+			for(i=0;i<arr2.length;i++) {
+				if(arr2[i].checked) {
+					jsonObject.pcodes.push(arr1[i].innerText);
+				}
+			}
+			console.log(jsonObject);
+			let jsonString = JSON.stringify(jsonObject);
+			let url = "/delete";
+			let xmlHttp = new XMLHttpRequest();
+			xmlHttp.open("POST", url, false);
+			xmlHttp.send(jsonString);
+			let JSON_Response = JSON.parse(xmlHttp.responseText);
+			if(JSON_Response["Success"]) {
+				document.getElementById('displist').click();
+			}
+			else {
+				alert(JSON_Response["Error"]);
+			}
+
+		}
+
+		function deleteButtonShowHide() {
+			let cnt = document.querySelectorAll('input[type="checkbox"]:checked').length;
+			// alert(document.getElementById('delprob'));
+			if(cnt > 0 && document.getElementById('delprob') == null) {
+				let x = document.getElementById('buttonsclass');
+				let text = '<button class="login100-form-btn m-t-10" onclick="javascript:deleteProblems()" id="delprob">Delete Problems</button>&nbsp;&nbsp;&nbsp;';
+				x.innerHTML += text;
+			}
+			else if(cnt == 0 && document.getElementById('delprob') != null) {
+				document.getElementById('delprob').remove();
+			}
+		}
+
 		function displayList() {
+			//delete the delete button
+			let del = document.getElementById('delprob');
+			if(del != null) {
+				document.getElementById('delprob').remove();
+			}
 			let uname = getCookie("username");
 			let url = "/problems";
 			let xmlHttp = new XMLHttpRequest();
@@ -77,11 +123,11 @@
 				let text = "";
 				for(index in JSON_Response){
 					let p_url = "https://www.codechef.com/problems/" + JSON_Response[index]['problemid'];
-					text = text + '<a class="txt1"  style="color:#FFFFFF" target="_blank" href="' + p_url + '">' + JSON_Response[index]['problemid'] + '</a> </br>';
+					text = text + '<div class ="checkbox"> <label> <input type="checkbox" value = "" onclick="javascript:deleteButtonShowHide()"> <a class="txt1"  style="color:#FFFFFF" target="_blank" href="' + p_url + '">' + JSON_Response[index]['problemid'] + '</a></label></div></br>';
 				}
 				let obj = document.getElementById('innercontent'); 
 				if(obj != null) {
-					obj.innerHTML = text;
+					obj.innerHTML = text ;
 				}
 				else {
 					document.getElementById('content').innerHTML = "<div class = 'text-center p-t-20' id='innercontent'>" + text + "</div>";
@@ -113,6 +159,13 @@
 		}
 
 		function addProblemDisplay() {
+
+			//remove delete button
+			let del = document.getElementById('delprob');
+			if(del != null) {
+				document.getElementById('delprob').remove();
+			}
+
 			let text = '<div class="wrap-input100"> \
 						<input class="input100" type="text" placeholder="Enter the problem ID" id="pid"> \
 						<span class="focus-input100" data-placeholder="&#xf230;"></span> \
@@ -134,7 +187,7 @@
 						<div id='hey'>
 						</div>
 					</span>
-					<div class="container-login100-form-btn">
+					<div class="container-login100-form-btn" id='buttonsclass'>
 						<button class="login100-form-btn" onclick="javascript:displayList()" id='displist'>
 							My ToDo List
 						</button>

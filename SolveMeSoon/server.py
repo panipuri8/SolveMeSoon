@@ -70,6 +70,21 @@ def add_problem():
 		print(e)
 		return jsonify({"Error":"Something went wrong"})
 
+@app.route("/delete", methods=['POST'])
+def delete_problems():
+	try:
+		data = request.get_json(force=True)
+		username = data["username"]
+		pcodes = data["pcodes"]
+		result = dbhandler.delete_problem(username,pcodes)
+		if(result == dbhandler.PROBLEMS_DELETED):
+			return jsonify({"Success":"Deleted"})
+		else:
+			return jsonify({"Error" : "Some error occured in the database"})
+	except Exception as e:
+		print(e)
+		return jsonify({"Error":"Something went wrong"})
+
 
 if(__name__ == '__main__'):
 	app.run(debug = True)

@@ -26,6 +26,9 @@ PROBLEM_ALREADY_EXISTS = 8002
 INVALID_PROBLEM  = 8003
 NOT_CONNECTED_TO_INTERNET = 8004
 
+PROBLEMS_DELETED = 9001
+
+
 def add_new_user(username,password,email):
 	try:
 		db = pymysql.connect(SERVER_NAME , DB_USERNAME , DB_PASSWORD ,DB_NAME)
@@ -44,6 +47,7 @@ def add_new_user(username,password,email):
 		print(e)
 		db.rollback()
 		return SOME_ERROR
+
 
 def login(username,password):
 	try:
@@ -108,7 +112,22 @@ def add_problem(username, problemid):
 		db.rollback()
 		return SOME_ERROR
 
+def delete_problem(username, list_of_problems):
+	try :
+		print("In database")
+		db = pymysql.connect(SERVER_NAME , DB_USERNAME , DB_PASSWORD ,DB_NAME)
+		cursor = db.cursor()
+		for problem in list_of_problems:
+			sql = "delete from cp_todo_list_problems where username=%s and problemid=%s"
+			cursor.execute(sql,(username,problem))
+		db.commit()
+		return PROBLEMS_DELETED
+	except Exception as e:
+		print("EXCEPTION IN DBHANDLER",e.__class__.__name__)
+		print(e)
+		db.rollback()
+		return SOME_ERROR
 
 if(__name__ == '__main__'):
-	x = add_problem('panipuri8' , 'SOOTHU')
+	x = add_problem('panipuri8' , 'RANDOM')
 	print(x)
