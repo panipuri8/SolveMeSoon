@@ -11,3 +11,4 @@ DB : MySQL
 <li> Currently supports Codechef.com </li> 
 <li> Problem code validation and non-duplication </li>
 <li> Uses cookies to enhance user experience </li>
+<li> Custom deletion of problems [UPD: 31-03-18] </li> 
