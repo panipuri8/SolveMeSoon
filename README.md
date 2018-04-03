@@ -1,4 +1,7 @@
 # SolveMeSoon
+
+SolveMeSoon, is a todo list that currently supports Codechef.com! Add problems to your list, and once you're done solving them, remove them from your list! 
+
 A RESTful Web Service implemented using Python(Backend) and HTML-CSS-Javascript(Front End)
 
 Front End : HTML CSS and Javascript 
